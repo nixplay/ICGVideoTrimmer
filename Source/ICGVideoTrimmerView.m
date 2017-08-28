@@ -85,15 +85,16 @@
     return [super initWithCoder:aDecoder];
 }
 
-- (instancetype)initWithAsset:(AVAsset *)asset
+- (instancetype)initWithAsset:(AVAsset *)asset delegate:(id<ICGVideoTrimmerDelegate>) delegate
 {
-    return [self initWithFrame:CGRectZero asset:asset];
+    return [self initWithFrame:CGRectZero asset:asset delegate:delegate];
 }
 
-- (instancetype)initWithFrame:(CGRect)frame asset:(AVAsset *)asset
+- (instancetype)initWithFrame:(CGRect)frame asset:(AVAsset *)asset delegate:(id<ICGVideoTrimmerDelegate>) delegate
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _delegate = delegate;
         _asset = asset;
         [self resetSubviews];
     }
@@ -102,7 +103,7 @@
 
 - (void)setThemeColor:(UIColor *)themeColor {
     _themeColor = themeColor;
-
+    
     [self.bottomBorder setBackgroundColor:_themeColor];
     [self.topBorder setBackgroundColor:_themeColor];
     self.leftThumbView.color = _themeColor;
@@ -372,8 +373,8 @@
 {
     //Validating the inputs.
     if(startTime < 0 || endTime < 0 || startTime>=endTime || endTime>CMTimeGetSeconds([self.asset duration]) || (endTime-startTime)<self.minLength || (endTime-startTime)>self.maxLength)
-            return;
-
+        return;
+    
     
     float newLeftOverlayViewMidX = [self getMiddleXPointForLeftOverlayViewWithTime:startTime];
     self.leftOverlayView.center = CGPointMake(newLeftOverlayViewMidX, self.leftOverlayView.center.y);
@@ -381,7 +382,7 @@
     float newRightOverlayVideMidX = [self getMiddleXPointForRightOverlayViewWithTime:endTime];
     self.rightOverlayView.center = CGPointMake(newRightOverlayVideMidX, self.rightOverlayView.center.y);
     
-     [self notifyDelegateOfDidChange];
+    [self notifyDelegateOfDidChange];
 }
 
 

@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 // Show ruler view on the trimmer view or not
 @property (assign, nonatomic) BOOL showsRulerView;
 
-// Number of seconds between 
+// Number of seconds between
 @property (assign, nonatomic) NSInteger rulerLabelInterval;
 
 // Customize color for tracker
@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithAsset:(AVAsset *)asset;
 
-- (instancetype)initWithFrame:(CGRect)frame asset:(AVAsset *)asset NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithFrame:(CGRect)frame asset:(AVAsset *)asset delegate:(id<ICGVideoTrimmerDelegate>) delegate NS_DESIGNATED_INITIALIZER;
 
 - (void)resetSubviews;
 
