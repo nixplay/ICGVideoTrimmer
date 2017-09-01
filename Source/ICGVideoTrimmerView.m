@@ -434,7 +434,7 @@
 
 - (void)notifyDelegateOfDidChange
 {
-    NSLog(@"leftOverlayView:%f , rightOverlayView:%f contentOffset.x:%@", CGRectGetMaxX(self.leftOverlayView.frame) , CGRectGetMaxX(self.rightOverlayView.frame) , @(self.scrollView.contentOffset.x));
+//    NSLog(@"leftOverlayView:%f , rightOverlayView:%f contentOffset.x:%@", CGRectGetMaxX(self.leftOverlayView.frame) , CGRectGetMaxX(self.rightOverlayView.frame) , @(self.scrollView.contentOffset.x));
     
     
     CGFloat start = CGRectGetMaxX(self.leftOverlayView.frame) / self.widthPerSecond + (self.scrollView.contentOffset.x -self.thumbWidth) / self.widthPerSecond;
@@ -446,7 +446,7 @@
     
     if (start==self.startTime && end==self.endTime){
         // thumb events may fire multiple times with the same value, so we detect them and ignore them.
-        NSLog(@"no change");
+//        NSLog(@"no change");
         return;
     }
     
