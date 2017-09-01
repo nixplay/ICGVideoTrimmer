@@ -151,6 +151,7 @@
 #define EDGE_EXTENSION_FOR_THUMB 30
 - (void)resetSubviews
 {
+    
     CALayer *sideMaskingLayer = [CALayer new];
     sideMaskingLayer.backgroundColor = [UIColor blackColor].CGColor;
     sideMaskingLayer.frame = CGRectMake(0, -10, self.frame.size.width, self.frame.size.height + 20);
@@ -542,27 +543,59 @@
         
         
     }
-    
+    typeof(self) __weak weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        for (int i=1; i<=[times count]; i++) {
-            CMTime time = [((NSValue *)[times objectAtIndex:i-1]) CMTimeValue];
+        
+        [self.imageGenerator generateCGImagesAsynchronouslyForTimes:times completionHandler:^(CMTime requestedTime, CGImageRef  _Nullable cgImageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError * _Nullable error) {
             
-            CGImageRef halfWayImage = [self.imageGenerator copyCGImageAtTime:time actualTime:NULL error:NULL];
-            
-            UIImage *videoScreen;
-            if ([self isRetina]){
-                videoScreen = [[UIImage alloc] initWithCGImage:halfWayImage scale:2.0 orientation:UIImageOrientationUp];
-            } else {
-                videoScreen = [[UIImage alloc] initWithCGImage:halfWayImage];
+            if(result == AVAssetImageGeneratorSucceeded){
+                typeof(self) strongSelf = weakSelf;
+                __block int tag = -1;
+                for(int i = 1 ; i < [times count]; i++){
+                    CMTime time = [[times objectAtIndex:i] CMTimeValue];
+                    if(CMTimeCompare(time , requestedTime)){
+                        tag = i;
+                        break;
+                    }
+                    
+                }
+                if(tag > 0){
+                    
+                    
+                    UIImage *videoScreen;
+                    if ([strongSelf isRetina]){
+                        videoScreen = [[UIImage alloc] initWithCGImage:cgImageRef scale:2.0 orientation:UIImageOrientationUp];
+                    } else {
+                        videoScreen = [[UIImage alloc] initWithCGImage:cgImageRef];
+                    }
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIImageView *imageView = (UIImageView *)[strongSelf.frameView viewWithTag:tag];
+                        [imageView setImage:videoScreen];
+                        
+                    });
+                }
             }
-            
-            CGImageRelease(halfWayImage);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                UIImageView *imageView = (UIImageView *)[self.frameView viewWithTag:i];
-                [imageView setImage:videoScreen];
-                
-            });
-        }
+        }];
+        //        for (int i=1; i<=[times count]; i++) {
+        //            CMTime time = [((NSValue *)[times objectAtIndex:i-1]) CMTimeValue];
+        //
+        //            CGImageRef halfWayImage = [self.imageGenerator copyCGImageAtTime:time actualTime:NULL error:NULL];
+        //
+        //            UIImage *videoScreen;
+        //            if ([self isRetina]){
+        //                videoScreen = [[UIImage alloc] initWithCGImage:halfWayImage scale:2.0 orientation:UIImageOrientationUp];
+        //            } else {
+        //                videoScreen = [[UIImage alloc] initWithCGImage:halfWayImage];
+        //            }
+        //
+        //            CGImageRelease(halfWayImage);
+        //            dispatch_async(dispatch_get_main_queue(), ^{
+        //                UIImageView *imageView = (UIImageView *)[self.frameView viewWithTag:i];
+        //                [imageView setImage:videoScreen];
+        //
+        //            });
+        //        }
     });
 }
 
