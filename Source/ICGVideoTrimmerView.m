@@ -147,7 +147,14 @@
 {
     return _rulerLabelInterval ?: 5;
 }
-
+-(void) didMoveToWindow {
+    [super didMoveToWindow]; // (does nothing by default)
+    if (self.window == nil) {
+        if(self.imageGenerator != nil){
+            [self.imageGenerator cancelAllCGImageGeneration];
+        }
+    }
+}
 #define EDGE_EXTENSION_FOR_THUMB 30
 - (void)resetSubviews
 {
@@ -219,7 +226,7 @@
     
     // add right overlay view
     CGFloat rightViewFrameX = CGRectGetWidth(self.frameView.frame) < CGRectGetWidth(self.frame) ? CGRectGetMaxX(self.frameView.frame) : CGRectGetWidth(self.frame) - self.thumbWidth;
-    self.rightOverlayView = [[HitTestView alloc] initWithFrame:CGRectMake(rightViewFrameX, 0, self.overlayWidth, CGRectGetHeight(self.frameView.frame))];
+    self.rightOverlayView = [[HitTestView alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.frame) < rightViewFrameX ? CGRectGetWidth(self.frameView.frame) : rightViewFrameX , 0, self.overlayWidth, CGRectGetHeight(self.frameView.frame))];
     self.rightOverlayView.hitTestEdgeInsets = UIEdgeInsetsMake(0, -(EDGE_EXTENSION_FOR_THUMB), 0, 0);
     
     if (self.rightThumbImage) {
@@ -371,11 +378,9 @@
 }
 
 -(void)setVideoBoundsToStartTime:(CGFloat)startTime endTime:(CGFloat)endTime
-{
-    //Validating the inputs.
+{     //Validating the inputs.
     if(startTime < 0 || endTime < 0 || startTime>=endTime || endTime>CMTimeGetSeconds([self.asset duration]) || (endTime-startTime)<self.minLength || (endTime-startTime)>self.maxLength)
         return;
-    
     
     float newLeftOverlayViewMidX = [self getMiddleXPointForLeftOverlayViewWithTime:startTime];
     self.leftOverlayView.center = CGPointMake(newLeftOverlayViewMidX, self.leftOverlayView.center.y);
