@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)hideTracker:(BOOL)flag;
 
--(void)setVideoBoundsToStartTime:(CGFloat)startTime endTime:(CGFloat)endTime;
+-(void)setVideoBoundsToStartTime:(CGFloat)startTime endTime:(CGFloat)endTime contentOffset:(CGPoint)contentOffset;
 
 
 @end
@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_END
 @protocol ICGVideoTrimmerDelegate <NSObject>
 
 @optional
-- (void)trimmerView:(nonnull ICGVideoTrimmerView *)trimmerView didChangeLeftPosition:(CGFloat)startTime rightPosition:(CGFloat)endTime;
+- (void)trimmerView:(nonnull ICGVideoTrimmerView *)trimmerView didChangeLeftPosition:(CGFloat)startTime rightPosition:(CGFloat)endTime contentOffset:(CGPoint)contentOffset;
 - (void)trimmerViewDidEndEditing:(nonnull ICGVideoTrimmerView *)trimmerView;
 
 @end

@@ -377,11 +377,11 @@
     }
 }
 
--(void)setVideoBoundsToStartTime:(CGFloat)startTime endTime:(CGFloat)endTime
+-(void)setVideoBoundsToStartTime:(CGFloat)startTime endTime:(CGFloat)endTime contentOffset:(CGPoint)contentOffset
 {     //Validating the inputs.
     if(startTime < 0 || endTime < 0 || startTime>=endTime || endTime>CMTimeGetSeconds([self.asset duration]) || (endTime-startTime)<self.minLength || (endTime-startTime)>self.maxLength)
         return;
-    
+    self.scrollView.contentOffset = contentOffset;
     float newLeftOverlayViewMidX = [self getMiddleXPointForLeftOverlayViewWithTime:startTime];
     self.leftOverlayView.center = CGPointMake(newLeftOverlayViewMidX, self.leftOverlayView.center.y);
     
@@ -458,9 +458,9 @@
     self.startTime = start;
     self.endTime = end;
     
-    if([self.delegate respondsToSelector:@selector(trimmerView:didChangeLeftPosition:rightPosition:)])
+    if([self.delegate respondsToSelector:@selector(trimmerView:didChangeLeftPosition:rightPosition:contentOffset:)])
     {
-        [self.delegate trimmerView:self didChangeLeftPosition:self.startTime rightPosition:self.endTime];
+        [self.delegate trimmerView:self didChangeLeftPosition:self.startTime rightPosition:self.endTime contentOffset:self.scrollView.contentOffset];
     }
 }
 
