@@ -214,7 +214,7 @@
         if([endTimeString length]>0)
               endTime = [alert.textFields.lastObject.text doubleValue];
         
-        [_trimmerView setVideoBoundsToStartTime:startTime endTime:endTime];
+        [_trimmerView setVideoBoundsToStartTime:startTime endTime:endTime contentOffset:CGPointMake(0,0)];
         
         
     }];
