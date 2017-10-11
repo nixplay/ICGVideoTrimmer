@@ -439,7 +439,7 @@
 
 - (void)notifyDelegateOfDidChange
 {
-//    NSLog(@"leftOverlayView:%f , rightOverlayView:%f contentOffset.x:%@", CGRectGetMaxX(self.leftOverlayView.frame) , CGRectGetMaxX(self.rightOverlayView.frame) , @(self.scrollView.contentOffset.x));
+    //    NSLog(@"leftOverlayView:%f , rightOverlayView:%f contentOffset.x:%@", CGRectGetMaxX(self.leftOverlayView.frame) , CGRectGetMaxX(self.rightOverlayView.frame) , @(self.scrollView.contentOffset.x));
     
     
     CGFloat start = CGRectGetMaxX(self.leftOverlayView.frame) / self.widthPerSecond + (self.scrollView.contentOffset.x -self.thumbWidth) / self.widthPerSecond;
@@ -451,7 +451,7 @@
     
     if (start==self.startTime && end==self.endTime){
         // thumb events may fire multiple times with the same value, so we detect them and ignore them.
-//        NSLog(@"no change");
+        //        NSLog(@"no change");
         return;
     }
     
@@ -528,9 +528,8 @@
         CMTime time = CMTimeMakeWithSeconds(i*durationPerFrame, 600);
         [times addObject:[NSValue valueWithCMTime:time]];
         
-        UIImageView *tmp = [[UIImageView alloc] initWithImage:videoScreen];
+        UIImageView *tmp = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frameView.frame.size.height, self.frameView.frame.size.height)];
         tmp.tag = i;
-        
         CGRect currentFrame = tmp.frame;
         currentFrame.origin.x = i*picWidth;
         
@@ -548,17 +547,19 @@
         
         
     }
-    typeof(self) __weak weakSelf = self;
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         [self.imageGenerator generateCGImagesAsynchronouslyForTimes:times completionHandler:^(CMTime requestedTime, CGImageRef  _Nullable cgImageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError * _Nullable error) {
             
             if(result == AVAssetImageGeneratorSucceeded){
-                typeof(self) strongSelf = weakSelf;
-                __block int tag = -1;
+                
+                int tag = -1;
+                
                 for(int i = 1 ; i < [times count]; i++){
                     CMTime time = [[times objectAtIndex:i] CMTimeValue];
-                    if(CMTimeCompare(time , requestedTime)){
+                    
+                    if(CMTimeCompare(time , requestedTime) == 0){
                         tag = i;
                         break;
                     }
@@ -567,16 +568,16 @@
                 if(tag > 0){
                     
                     
-                    UIImage *videoScreen;
-                    if ([strongSelf isRetina]){
-                        videoScreen = [[UIImage alloc] initWithCGImage:cgImageRef scale:2.0 orientation:UIImageOrientationUp];
+                    UIImage *screen;
+                    if ([self isRetina]){
+                        screen = [[UIImage alloc] initWithCGImage:cgImageRef scale:2.0 orientation:UIImageOrientationUp];
                     } else {
-                        videoScreen = [[UIImage alloc] initWithCGImage:cgImageRef];
+                        screen = [[UIImage alloc] initWithCGImage:cgImageRef];
                     }
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        UIImageView *imageView = (UIImageView *)[strongSelf.frameView viewWithTag:tag];
-                        [imageView setImage:videoScreen];
+                        UIImageView *imageView = (UIImageView *)[self.frameView viewWithTag:tag];
+                        [imageView setImage:screen];
                         
                     });
                 }
