@@ -458,9 +458,9 @@
     self.startTime = start;
     self.endTime = end;
     
-    if([self.delegate respondsToSelector:@selector(trimmerView:didChangeLeftPosition:rightPosition:contentOffset:)])
+    if([self.delegate respondsToSelector:@selector(trimmerView:didChangeLeftPosition:rightPosition:trimmerViewContentOffset:)])
     {
-        [self.delegate trimmerView:self didChangeLeftPosition:self.startTime rightPosition:self.endTime contentOffset:self.scrollView.contentOffset];
+        [self.delegate trimmerView:self didChangeLeftPosition:self.startTime rightPosition:self.endTime trimmerViewContentOffset:self.scrollView.contentOffset];
     }
 }
 
