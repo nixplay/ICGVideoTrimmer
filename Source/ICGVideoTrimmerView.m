@@ -482,7 +482,7 @@
         self.imageGenerator.maximumSize = CGSizeMake(CGRectGetWidth(self.frameView.frame), CGRectGetHeight(self.frameView.frame));
     }
     
-    CGFloat picWidth = 0;
+    CGFloat picWidth = [[UIScreen mainScreen]bounds].size.width ;
     
     // First image
     NSError *error;
@@ -630,3 +630,4 @@
 
 
 @end
+
