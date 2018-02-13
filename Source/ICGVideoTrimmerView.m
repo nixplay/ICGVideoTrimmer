@@ -125,7 +125,7 @@
 
 - (CGFloat)minLength
 {
-    return _minLength ?: 3;
+    return _minLength ?: 0;
 }
 
 - (UIColor *)trackerColor
@@ -140,7 +140,7 @@
 
 - (CGFloat)thumbWidth
 {
-    return _thumbWidth ?: 10;
+    return _thumbWidth ?: 20;
 }
 
 - (NSInteger) rulerLabelInterval
