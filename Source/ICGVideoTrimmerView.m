@@ -125,12 +125,12 @@
 
 - (CGFloat)minLength
 {
-    return _minLength ?: 3;
+    return _minLength ?: 0;
 }
 
 - (UIColor *)trackerColor
 {
-    return _trackerColor ?: [UIColor whiteColor];
+    return _trackerColor ?: [UIColor colorWithRed:(99/255.0f)  green:(176/255.0f)  blue:(228.0f/255.0f) alpha:1.0];
 }
 
 - (CGFloat)borderWidth
@@ -140,7 +140,7 @@
 
 - (CGFloat)thumbWidth
 {
-    return _thumbWidth ?: 10;
+    return _thumbWidth ?: 20;
 }
 
 - (NSInteger) rulerLabelInterval
@@ -458,9 +458,9 @@
     self.startTime = start;
     self.endTime = end;
     
-    if([self.delegate respondsToSelector:@selector(trimmerView:didChangeLeftPosition:rightPosition:contentOffset:)])
+    if([self.delegate respondsToSelector:@selector(trimmerView:didChangeLeftPosition:rightPosition:trimmerViewContentOffset:)])
     {
-        [self.delegate trimmerView:self didChangeLeftPosition:self.startTime rightPosition:self.endTime contentOffset:self.scrollView.contentOffset];
+        [self.delegate trimmerView:self didChangeLeftPosition:self.startTime rightPosition:self.endTime trimmerViewContentOffset:self.scrollView.contentOffset];
     }
 }
 
@@ -482,7 +482,7 @@
         self.imageGenerator.maximumSize = CGSizeMake(CGRectGetWidth(self.frameView.frame), CGRectGetHeight(self.frameView.frame));
     }
     
-    CGFloat picWidth = 0;
+    CGFloat picWidth = [[UIScreen mainScreen]bounds].size.width ;
     
     // First image
     NSError *error;
@@ -630,3 +630,4 @@
 
 
 @end
+
