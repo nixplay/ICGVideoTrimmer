@@ -202,9 +202,10 @@
     // width for left and right overlay views
     self.overlayWidth =  CGRectGetWidth(self.frame) - (self.minLength * self.widthPerSecond);
     
+    float frameViewWidth = CGRectGetMaxX(self.frameView.frame);
     // set trimmed time
     float trimmedStartTime = (self.trimmedStartTime > 0) ? self.trimmedStartTime * self.widthPerSecond : 0.0f;
-    float trimmedEndTime = (self.trimmedEndTime > 0) ? self.trimmedEndTime * self.widthPerSecond : 0.0f;
+    float trimmedEndTime = (self.trimmedEndTime > 0) ? self.trimmedEndTime * (frameViewWidth/self.maxLength) : 0.0f;
 
     // add left overlay view
     self.leftOverlayView = [[HitTestView alloc] initWithFrame:CGRectMake((self.thumbWidth + trimmedStartTime) - self.overlayWidth, 0, self.overlayWidth, CGRectGetHeight(self.frameView.frame))];
@@ -228,14 +229,8 @@
     [self.leftOverlayView setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.8]];
     [self addSubview:self.leftOverlayView];
     
-    // add right overlay view
-    CGFloat rightViewFrameX = CGRectGetWidth(self.frameView.frame) < CGRectGetWidth(self.frame) ? CGRectGetMaxX(self.frameView.frame) : CGRectGetWidth(self.frame) - self.thumbWidth;
 
-    if (self.trimmedEndTime < self.maxLength) {
-        rightViewFrameX = trimmedEndTime;
-    }
-
-    self.rightOverlayView = [[HitTestView alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.frame) < rightViewFrameX ? CGRectGetWidth(self.frameView.frame) : rightViewFrameX , 0, self.overlayWidth, CGRectGetHeight(self.frameView.frame))];
+    self.rightOverlayView = [[HitTestView alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.frame) < trimmedEndTime ? CGRectGetWidth(self.frameView.frame) : trimmedEndTime , 0, self.overlayWidth, CGRectGetHeight(self.frameView.frame))];
     self.rightOverlayView.hitTestEdgeInsets = UIEdgeInsetsMake(0, -(EDGE_EXTENSION_FOR_THUMB), 0, 0);
     
     if (self.rightThumbImage) {
