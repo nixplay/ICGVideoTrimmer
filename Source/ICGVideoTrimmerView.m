@@ -202,10 +202,14 @@
     // width for left and right overlay views
     self.overlayWidth =  CGRectGetWidth(self.frame) - (self.minLength * self.widthPerSecond);
     
+    // set trimmed time
+    float trimmedStartTime = (self.trimmedStartTime > 0) ? self.trimmedStartTime * self.widthPerSecond : 0.0f;
+    float trimmedEndTime = (self.trimmedEndTime > 0) ? self.trimmedEndTime * self.widthPerSecond : 0.0f;
+
     // add left overlay view
-    self.leftOverlayView = [[HitTestView alloc] initWithFrame:CGRectMake(self.thumbWidth - self.overlayWidth, 0, self.overlayWidth, CGRectGetHeight(self.frameView.frame))];
+    self.leftOverlayView = [[HitTestView alloc] initWithFrame:CGRectMake((self.thumbWidth + trimmedStartTime) - self.overlayWidth, 0, self.overlayWidth, CGRectGetHeight(self.frameView.frame))];
     self.leftOverlayView.hitTestEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -(EDGE_EXTENSION_FOR_THUMB));
-    CGRect leftThumbFrame = CGRectMake(self.overlayWidth-self.thumbWidth, 0, self.thumbWidth, CGRectGetHeight(self.frameView.frame));
+    CGRect leftThumbFrame = CGRectMake((self.overlayWidth-self.thumbWidth), 0, self.thumbWidth, CGRectGetHeight(self.frameView.frame));
     if (self.leftThumbImage) {
         self.leftThumbView = [[ICGThumbView alloc] initWithFrame:leftThumbFrame thumbImage:self.leftThumbImage];
     } else {
@@ -226,6 +230,11 @@
     
     // add right overlay view
     CGFloat rightViewFrameX = CGRectGetWidth(self.frameView.frame) < CGRectGetWidth(self.frame) ? CGRectGetMaxX(self.frameView.frame) : CGRectGetWidth(self.frame) - self.thumbWidth;
+
+    if (self.trimmedEndTime < self.maxLength) {
+        rightViewFrameX = trimmedEndTime;
+    }
+
     self.rightOverlayView = [[HitTestView alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.frame) < rightViewFrameX ? CGRectGetWidth(self.frameView.frame) : rightViewFrameX , 0, self.overlayWidth, CGRectGetHeight(self.frameView.frame))];
     self.rightOverlayView.hitTestEdgeInsets = UIEdgeInsetsMake(0, -(EDGE_EXTENSION_FOR_THUMB), 0, 0);
     
